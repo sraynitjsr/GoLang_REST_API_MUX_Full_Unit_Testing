@@ -3,8 +3,8 @@ package model
 import "fmt"
 
 type Student struct {
-	name string
-	roll int
+	Name string
+	Roll int
 }
 
 type StudentRepository interface {
@@ -37,7 +37,7 @@ func NewInMemoryStudentRepository() *InMemoryStudentRepository {
 }
 
 func (r *InMemoryStudentRepository) Add(student *Student) error {
-	r.students[student.roll] = student
+	r.students[student.Roll] = student
 	return nil
 }
 
