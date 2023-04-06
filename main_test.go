@@ -4,8 +4,15 @@ import (
 	"fmt"
 	"testing"
 
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	. "github.com/sraynitjsr/model"
 )
+
+func TestStudents(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Student Suite")
+}
 
 type mockStudentRepository struct {
 	students map[int]*Student
