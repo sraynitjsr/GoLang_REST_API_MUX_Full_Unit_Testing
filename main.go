@@ -2,24 +2,20 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 
-	"github.com/gorilla/mux"
-	"github.com/sraynitjsr/route"
+	"github.com/sraynitjsr/controller"
+	"github.com/sraynitjsr/router"
 )
 
 func main() {
 	fmt.Println("GoLang Gorilla MUX REST API")
 
-	router := mux.NewRouter()
+	myMuxRouter := router.NewMuxRouter()
+	myController := controller.NewPostController()
 
-	router.HandleFunc("/", route.Home)
+	myMuxRouter.Get("/", myController.Home)
+	myMuxRouter.Get("/posts", myController.GetPosts)
+	myMuxRouter.Post("/posts", myController.AddPosts)
 
-	router.HandleFunc("/posts", route.GetPosts).Methods("GET")
-
-	router.HandleFunc("/posts", route.AddPosts).Methods("POST")
-
-	log.Println("Starting Server at Port 8000")
-	log.Fatalln(http.ListenAndServe(":8000", router))
+	myMuxRouter.Start(":8080")
 }
