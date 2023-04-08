@@ -16,7 +16,9 @@ func main() {
 
 	router.HandleFunc("/", route.Home)
 
-	router.HandleFunc("/posts", route.GetPosts)
+	router.HandleFunc("/posts", route.GetPosts).Methods("GET")
+
+	router.HandleFunc("/posts", route.AddPosts).Methods("POST")
 
 	log.Println("Starting Server at Port 8000")
 	log.Fatalln(http.ListenAndServe(":8000", router))

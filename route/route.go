@@ -37,3 +37,19 @@ func GetPosts(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.WriteHeader(http.StatusOK)
 	responseWriter.Write(result)
 }
+
+func AddPosts(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Header().Set("Content-type", "application/json")
+	var newPost Post
+	err := json.NewDecoder(request.Body).Decode(&newPost)
+	if err != nil {
+		responseWriter.WriteHeader(http.StatusInternalServerError)
+		responseWriter.Write([]byte(`{"error":"error unmarshalling the request"}`))
+		return
+	}
+	newPost.ID = len(posts) + 1
+	posts = append(posts, newPost)
+	responseWriter.WriteHeader(http.StatusOK)
+	result, _ := json.Marshal(newPost)
+	responseWriter.Write(result)
+}
