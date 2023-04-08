@@ -69,8 +69,6 @@ func (repo *RepositoryImpl) FindAll() ([]entity.Post, error) {
 			break
 		}
 
-		log.Println(allPosts, " Hi ", newDoc.Data())
-
 		currentPost := entity.Post{
 			ID:    newDoc.Data()["ID"].(int64),
 			Title: newDoc.Data()["Title"].(string),
