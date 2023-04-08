@@ -4,18 +4,25 @@ import (
 	"fmt"
 
 	"github.com/sraynitjsr/controller"
+	"github.com/sraynitjsr/repository"
 	"github.com/sraynitjsr/router"
+	"github.com/sraynitjsr/service"
+)
+
+var (
+	repo         = repository.NewFireStoreRepository()
+	svc          = service.NewPostService(repo)
+	myController = controller.NewPostController(svc)
+
+	myMuxRouter = router.NewMuxRouter()
 )
 
 func main() {
 	fmt.Println("GoLang Gorilla MUX REST API")
 
-	myMuxRouter := router.NewMuxRouter()
-	myController := controller.NewPostController()
+	myMuxRouter.GET("/", myController.Home)
+	myMuxRouter.GET("/posts", myController.GetPosts)
+	myMuxRouter.POST("/posts", myController.AddPosts)
 
-	myMuxRouter.Get("/", myController.Home)
-	myMuxRouter.Get("/posts", myController.GetPosts)
-	myMuxRouter.Post("/posts", myController.AddPosts)
-
-	myMuxRouter.Start(":8080")
+	myMuxRouter.SERVE(":8080")
 }

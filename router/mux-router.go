@@ -5,12 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/sraynitjsr/controller"
 )
 
 var (
 	gorillaMuxRouter = mux.NewRouter()
-	newController    = controller.NewPostController()
 )
 
 type muxRouter struct{}
@@ -19,19 +17,19 @@ func NewMuxRouter() Router {
 	return &muxRouter{}
 }
 
-func (mr *muxRouter) Home(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
-	gorillaMuxRouter.HandleFunc(uri, newController.Home)
+func (mr *muxRouter) HOME(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
+	gorillaMuxRouter.HandleFunc(uri, f).Methods("GET")
 }
 
-func (mr *muxRouter) Get(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
-	gorillaMuxRouter.HandleFunc(uri, newController.GetPosts).Methods("GET")
+func (mr *muxRouter) GET(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
+	gorillaMuxRouter.HandleFunc(uri, f).Methods("GET")
 }
 
-func (mr *muxRouter) Post(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
-	gorillaMuxRouter.HandleFunc(uri, newController.AddPosts).Methods("POST")
+func (mr *muxRouter) POST(uri string, f func(responseWriter http.ResponseWriter, request *http.Request)) {
+	gorillaMuxRouter.HandleFunc(uri, f).Methods("POST")
 }
 
-func (mr *muxRouter) Start(port string) {
+func (mr *muxRouter) SERVE(port string) {
 	log.Println("Starting Server at Port", port)
 	log.Fatalln(http.ListenAndServe(port, gorillaMuxRouter))
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/sraynitjsr/service"
 )
 
-var svc service.PostService = service.NewPostService()
+var svc service.PostService
 
 type PostController interface {
 	Home(responseWriter http.ResponseWriter, request *http.Request)
@@ -19,7 +19,8 @@ type PostController interface {
 
 type PostControllerImpl struct{}
 
-func NewPostController() PostController {
+func NewPostController(service service.PostService) PostController {
+	svc = service
 	return &PostControllerImpl{}
 }
 

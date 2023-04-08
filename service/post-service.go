@@ -8,7 +8,7 @@ import (
 	"github.com/sraynitjsr/repository"
 )
 
-var repo repository.PostRepository = repository.NewFireStoreRepository()
+var repo repository.PostRepository
 
 type PostService interface {
 	Validate(post *entity.Post) error
@@ -18,7 +18,8 @@ type PostService interface {
 
 type service struct{}
 
-func NewPostService() PostService {
+func NewPostService(repository repository.PostRepository) PostService {
+	repo = repository
 	return &service{}
 }
 
