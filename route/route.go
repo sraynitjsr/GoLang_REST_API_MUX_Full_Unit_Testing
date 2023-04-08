@@ -2,25 +2,14 @@ package route
 
 import (
 	"encoding/json"
+	"math/rand"
 	"net/http"
+
+	"github.com/sraynitjsr/entity"
+	"github.com/sraynitjsr/repository"
 )
 
-type Post struct {
-	ID    int    `json:"id"`
-	Title string `json:"title"`
-	Text  string `json:"text"`
-}
-
-var posts []Post
-
-func init() {
-	post := Post{
-		ID:    1,
-		Title: "Title One",
-		Text:  "Text One",
-	}
-	posts = append(posts, post)
-}
+var repo repository.PostRepository = repository.NewPostRepository()
 
 func Home(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Write([]byte(`{"Welcome Home"}`))
@@ -28,28 +17,29 @@ func Home(responseWriter http.ResponseWriter, request *http.Request) {
 
 func GetPosts(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-type", "application/json")
-	result, err := json.Marshal(posts)
+
+	posts, err := repo.FindAll()
+
 	if err != nil {
 		responseWriter.WriteHeader(http.StatusInternalServerError)
-		responseWriter.Write([]byte(`{"error":"error marshalling the posts slice"}`))
+		responseWriter.Write([]byte(`{"error":"error getting the posts"}`))
 		return
 	}
 	responseWriter.WriteHeader(http.StatusOK)
-	responseWriter.Write(result)
+	json.NewEncoder(responseWriter).Encode(posts)
 }
 
 func AddPosts(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-type", "application/json")
-	var newPost Post
+	var newPost entity.Post
 	err := json.NewDecoder(request.Body).Decode(&newPost)
 	if err != nil {
 		responseWriter.WriteHeader(http.StatusInternalServerError)
 		responseWriter.Write([]byte(`{"error":"error unmarshalling the request"}`))
 		return
 	}
-	newPost.ID = len(posts) + 1
-	posts = append(posts, newPost)
+	newPost.ID = int64(rand.Int())
+	repo.Save(&newPost)
 	responseWriter.WriteHeader(http.StatusOK)
-	result, _ := json.Marshal(newPost)
-	responseWriter.Write(result)
+	json.NewEncoder(responseWriter).Encode(newPost)
 }
