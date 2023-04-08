@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sraynitjsr/route"
 )
 
 func main() {
@@ -13,9 +14,10 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", func(responseWriter http.ResponseWriter, request *http.Request) {
-		fmt.Fprintln(responseWriter, "Home Handler, Welcome...............")
-	})
+	router.HandleFunc("/", route.Home)
+
+	router.HandleFunc("/posts", route.GetPosts)
+
 	log.Println("Starting Server at Port 8000")
 	log.Fatalln(http.ListenAndServe(":8000", router))
 }
