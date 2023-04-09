@@ -41,6 +41,9 @@ func TestFindAll(t *testing.T) {
 	assert.Equal(t, int64(100), result[0].ID)
 	assert.Equal(t, "Some Title", result[0].Title)
 	assert.Equal(t, "Some Text", result[0].Text)
+
+	//Mock Assertion => Behavorial Testing
+	mockRepo.AssertExpectations(t)
 }
 
 func TestValidateEmptyPost(t *testing.T) {
