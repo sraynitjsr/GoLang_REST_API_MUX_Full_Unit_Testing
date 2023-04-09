@@ -32,9 +32,9 @@ func TestFindAll(t *testing.T) {
 	}
 	mockRepo := new(MockRepository)
 
-	mockRepo.On("FindAll").Return([]entity.Post{post}, nil)
-
 	testService := NewPostService(mockRepo)
+
+	mockRepo.On("FindAll").Return([]entity.Post{post}, nil)
 
 	result, _ := testService.FindAll()
 
@@ -43,6 +43,29 @@ func TestFindAll(t *testing.T) {
 	assert.Equal(t, "Some Text", result[0].Text)
 
 	//Mock Assertion => Behavorial Testing
+	mockRepo.AssertExpectations(t)
+}
+
+func TestCreate(t *testing.T) {
+	post := entity.Post{
+		ID:    111,
+		Title: "Some Dummy Title",
+		Text:  "Some Dummy Text",
+	}
+
+	mockRepo := new(MockRepository)
+
+	testService := NewPostService(mockRepo)
+
+	mockRepo.On("Save").Return(&post, nil)
+
+	result, err := testService.Create(&post)
+
+	assert.Nil(t, err)
+	assert.NotNil(t, result.ID)
+	assert.Equal(t, "Some Dummy Title", result.Title)
+	assert.Equal(t, "Some Dummy Text", result.Text)
+
 	mockRepo.AssertExpectations(t)
 }
 
